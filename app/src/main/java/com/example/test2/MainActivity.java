@@ -2,18 +2,16 @@ package com.example.test2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
+import com.example.test2.home.HomeFragment;
+import com.example.test2.setting.SettingFragment;
+import com.example.test2.ticketbox.TicketboxFragment;
+import com.example.test2.timeline.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.ArrayList;
-import java.util.Dictionary;
 
 public class MainActivity extends AppCompatActivity {
 
