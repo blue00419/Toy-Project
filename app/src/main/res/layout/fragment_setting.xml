@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".home.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        app:liftOnScroll="true"
-        android:layout_height="128dp">
+        android:layout_height="128dp"
+        app:liftOnScroll="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             android:background="@color/white"
             app:contentScrim="@color/white"
-            app:statusBarScrim="@color/white"
+            app:expandedTitleMarginBottom="28dp"
             app:expandedTitleMarginStart="72dp"
-            app:expandedTitleMarginBottom="28dp">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:statusBarScrim="@color/white">
 
             <com.google.android.material.appbar.MaterialToolbar
-                app:layout_collapseMode="pin"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="@string/setting"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
                 android:elevation="0dp"
-                />
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:title="@string/setting" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -55,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
-                    android:src="@drawable/oneperson"/>
+                    android:src="@drawable/oneperson" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -65,49 +63,61 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="20dp"
                         android:paddingLeft="10dp"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
+                        android:paddingTop="20dp"
                         android:paddingBottom="10dp"
                         android:text="계정"
-                        />
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="내 정보"
-                        />
+                        android:textSize="15dp" />
+
                     <TextView
+                        android:id="@+id/login_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
+                        android:onClick="EventLogin"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="로그인"
-                        />
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/account_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="EventAccount"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="회원가입"
+                        android:textSize="15dp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="정보제공동의 관리"
-                        />
+                        android:textSize="15dp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="기기정보사용동의 관리"
-                        />
+                        android:textSize="15dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -121,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
-                    android:src="@drawable/twoperson"/>
+                    android:src="@drawable/twoperson" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -131,13 +141,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="20dp"
                         android:paddingLeft="10dp"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
+                        android:paddingTop="20dp"
                         android:paddingBottom="10dp"
                         android:text="친구"
-                        />
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -146,38 +156,37 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingTop="10dp"
                             android:paddingLeft="10dp"
-                            android:textSize="15dp"
+                            android:paddingTop="10dp"
                             android:paddingBottom="10dp"
                             android:text="친구 목록 새로고침"
-                            />
+                            android:textSize="15dp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:padding="10dp"
-                            android:src="@drawable/refresh"/>
+                            android:src="@drawable/refresh" />
 
                     </LinearLayout>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="친구 목록 관리"
-                        />
+                        android:textSize="15dp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="친구 차단 관리"
-                        />
+                        android:textSize="15dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -191,7 +200,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
-                    android:src="@drawable/ticketbox"/>
+                    android:src="@drawable/ticketbox" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -201,31 +210,30 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="20dp"
                         android:paddingLeft="10dp"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
+                        android:paddingTop="20dp"
                         android:paddingBottom="10dp"
                         android:text="티켓"
-                        />
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="내 티켓 내보내기"
-                        />
+                        android:textSize="15dp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="내 티켓 불러오기"
-                        />
+                        android:textSize="15dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -239,7 +247,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
-                    android:src="@drawable/error"/>
+                    android:src="@drawable/error" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -249,40 +257,40 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="20dp"
                         android:paddingLeft="10dp"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
+                        android:paddingTop="20dp"
                         android:paddingBottom="10dp"
                         android:text="어플리케이션"
-                        />
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="앱 버전"
-                        />
+                        android:textSize="15dp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="개인정보취급방침"
-                        />
+                        android:textSize="15dp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textSize="15dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="오픈소스라이센스"
-                        />
+                        android:textSize="15dp" />
+
                 </LinearLayout>
 
             </LinearLayout>

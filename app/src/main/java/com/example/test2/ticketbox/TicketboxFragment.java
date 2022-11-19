@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.test2.R;
+import com.example.test2.home.HomeFragment;
 import com.example.test2.ticketbox.TicketboxData;
 
 import java.util.ArrayList;
@@ -38,11 +39,14 @@ public class TicketboxFragment extends Fragment {
         tickectboxAdapter = new TickectboxAdapter(ticketboxList);
         recyclerView.setAdapter(tickectboxAdapter);
 
-        for(int i=0; i<4; i++){
-            tickboxcount++;
-            TicketboxData data = new TicketboxData(R.drawable.image1, "내 영수증", "10" + "개");
-            ticketboxList.add(data);
-        }
+        TicketboxData data = new TicketboxData(R.drawable.image1, "내 영수증", "30" + "개");
+        ticketboxList.add(data);
+        TicketboxData data1 = new TicketboxData(R.drawable.image1, "내 영화표", "15" + "개");
+        ticketboxList.add(data1);
+        TicketboxData data2 = new TicketboxData(R.drawable.image1, "내 승차표", "10" + "개");
+        ticketboxList.add(data2);
+        TicketboxData data3 = new TicketboxData(R.drawable.image1, "내 로또", "2" + "개");
+        ticketboxList.add(data3);
         tickectboxAdapter.notifyDataSetChanged();
         // Inflate the layout for this fragment
         return view;

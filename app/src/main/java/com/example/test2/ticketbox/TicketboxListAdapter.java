@@ -1,4 +1,4 @@
-package com.example.test2.timeline;
+package com.example.test2.ticketbox;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.test2.R;
+import com.example.test2.timeline.TimelineData;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
+public class TicketboxListAdapter extends RecyclerView.Adapter<TicketboxListAdapter.ViewHolder>{
 
     private List<TimelineData> mList;
 
@@ -34,23 +37,23 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         }
     }
 
-    public TimelineAdapter(List<TimelineData> list){
+    public TicketboxListAdapter(List<TimelineData> list){
         this.mList = list;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TicketboxListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.timeline_list, parent, false);
+                .inflate(R.layout.ticketboxlist_list, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(view);
+        TicketboxListAdapter.ViewHolder viewHolder = new TicketboxListAdapter.ViewHolder(view);
 
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TicketboxListAdapter.ViewHolder holder, int position) {
         holder.imageView.setImageResource(mList.get(position).getImage());
         holder.info1.setText(mList.get(position).getInfo1());
         holder.info2.setText(mList.get(position).getInfo2());
@@ -61,5 +64,4 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     public int getItemCount() {
         return mList.size();
     }
-
 }
