@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.test2.home.HomeFragment;
@@ -13,17 +14,54 @@ import com.example.test2.timeline.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
 
-    HomeFragment homeFragment;
-    TimelineFragment timelineFragment;
-    TicketboxFragment ticketboxFragment;
-    SettingFragment settingFragment;
+    private HomeFragment homeFragment;
+    private TimelineFragment timelineFragment;
+    private TicketboxFragment ticketboxFragment;
+    private SettingFragment settingFragment;
+
+    private Retrofit retrofit;
+    private ApiService apiService;
+    private Call<List<Json_Test>> comment;
+    private List<Json_Test> result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        retrofit = new Retrofit.Builder().baseUrl(ApiService.API_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        apiService = retrofit.create(ApiService.class);
+        comment = apiService.get_Test3();
+        comment.enqueue(new Callback<List<Json_Test>>() {
+            @Override
+            public void onResponse(Call<List<Json_Test>> call, Response<List<Json_Test>> response) {
+                if(response.isSuccessful()){
+                    result = response.body();
+                    Log.d("Retrofit", "get 성공" + result.get(0).getEmail());
+                }
+                else{
+                    Log.d("Retrofit", "get 실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Json_Test>> call, Throwable t) {
+                Log.d("Retrofit", "연결 실패");
+            }
+        });
+
+
 
         homeFragment = new HomeFragment();
         timelineFragment = new TimelineFragment();
