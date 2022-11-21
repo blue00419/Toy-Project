@@ -18,6 +18,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,18 +72,31 @@ public class AccountActivity extends AppCompatActivity {
                                 .setAction("Action", null).show();
                     }
                     else{
-                        Log.d("Retrofit", "post");
                         Retrofit retrofit = new Retrofit.Builder().baseUrl(ApiService.API_URL)
                                 .addConverterFactory(GsonConverterFactory.create()).build();
                         ApiService apiService = retrofit.create(ApiService.class);
 
                         UserData user = new UserData(email, password, nickname);
-                        Call<UserData> comment = apiService.post_account(user);
-                        comment.enqueue(new Callback<UserData>() {
+                        Call<UserData> comment2 = apiService.post_account(user);
+                        comment2.enqueue(new Callback<UserData>() {
                             @Override
                             public void onResponse(Call<UserData> call, Response<UserData> response) {
                                 if(response.isSuccessful()){
-                                    Log.d("Retrofit", "post 성공");
+                                    Log.d("Retrofit", "account 연결 " + response.code());
+
+                                    switch (response.code()){
+                                        case 200:
+                                            Snackbar.make(view, "성공", Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                            finish();
+                                        case 201:
+                                            Snackbar.make(view, "중복", Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                        case 202:
+                                            Snackbar.make(view, "이메일 형식을 확인해주세요.", Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+
+                                    }
                                 }
                                 else{
                                     Log.d("Retrofit", "post 실패");
