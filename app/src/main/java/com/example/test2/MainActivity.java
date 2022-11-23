@@ -2,7 +2,10 @@ package com.example.test2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,17 +31,28 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private TimelineFragment timelineFragment;
     private TicketboxFragment ticketboxFragment;
-    private SettingFragment settingFragment;
+    public static SettingFragment settingFragment;
 
     private Retrofit retrofit;
     private ApiService apiService;
     private Call<List<Json_Test>> comment;
     private List<Json_Test> result;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
+
+        SaveSharedPreference.getSharedPreferences(getApplicationContext());
+        String user = SaveSharedPreference.getUserName(getApplicationContext());
+        if(user.length() != 0){
+            Log.d("Retrofit", "user 있음 : " + user);
+        }
+        else{
+            Log.d("Retrofit", "user 없음 : " + user);
+        }
 
         retrofit = new Retrofit.Builder().baseUrl(ApiService.API_URL).addConverterFactory(GsonConverterFactory.create()).build();
         apiService = retrofit.create(ApiService.class);
@@ -48,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Json_Test>> call, Response<List<Json_Test>> response) {
                 if(response.isSuccessful()){
                     result = response.body();
-                    Log.d("Retrofit", "get 성공" + result.get(0).getEmail());
+                    Log.d("Retrofit", "get 성공" + result);
                 }
                 else{
                     Log.d("Retrofit", "get 실패");
@@ -60,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Retrofit", "연결 실패");
             }
         });
-
-
 
         homeFragment = new HomeFragment();
         timelineFragment = new TimelineFragment();
@@ -93,5 +105,22 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void refresh(int idx){
+
+        String text;
+        if(idx == 0){
+            text = "로그아웃";
+        }
+        else{
+            text = "로그인";
+        }
+        settingFragment.setText(text);
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        finish();
+        overridePendingTransition(0,0);
+        startActivity(intent);
+        overridePendingTransition(0,0);
     }
 }

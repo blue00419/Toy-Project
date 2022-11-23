@@ -1,9 +1,13 @@
 package com.example.test2;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -12,9 +16,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.test2.setting.SettingFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Set;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -63,27 +70,37 @@ public class LoginActivity extends AppCompatActivity {
                     ApiService apiService = retrofit.create(ApiService.class);
 
                     UserData user = new UserData(email, password, "aaa");
-                    Call<UserData> comment2 = apiService.post_login(user);
-                    comment2.enqueue(new Callback<UserData>() {
+                    Call<Data> comment2 = apiService.post_login(user);
+                    comment2.enqueue(new Callback<Data>() {
                         @Override
-                        public void onResponse(Call<UserData> call, Response<UserData> response) {
+                        public void onResponse(Call<Data> call, Response<Data> response) {
                             if(response.isSuccessful()){
-                                Log.d("Retrofit", "login 연결 " + response.code() + " " + response.toString() + "aa");
+                                String responsenickname = response.body().getNickname();
+                                int responsecode = response.body().getCode();
+                                String responsemsg = response.body().getMsg();
+                                Log.d("Retrofit", "login 연결 " + responsecode + " " + responsenickname + " " + responsemsg);
 
-                                switch (response.code()){
+                                switch (responsecode){
                                     case 200:
-                                        Snackbar.make(view, "성공", Snackbar.LENGTH_LONG)
+                                        Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
+
+                                        SaveSharedPreference.setUserName(getApplicationContext(), responsenickname);
+                                        ((MainActivity) MainActivity.context).refresh(0);
                                         finish();
+                                        break;
                                     case 201:
-                                        Snackbar.make(view, "비밀번호를 확인해주세요.", Snackbar.LENGTH_LONG)
+                                        Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
+                                        break;
                                     case 202:
-                                        Snackbar.make(view, "이메일이 존재하지 않습니다.", Snackbar.LENGTH_LONG)
+                                        Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
+                                        break;
                                     case 203:
-                                        Snackbar.make(view, "이메일 형식을 확인해주세요.", Snackbar.LENGTH_LONG)
+                                        Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
+                                        break;
                                 }
                             }
                             else{
@@ -95,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<UserData> call, Throwable t) {
+                        public void onFailure(Call<Data> call, Throwable t) {
                             Log.d("Retrofit", "연결 실패");
                         }
                     });
@@ -132,4 +149,5 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
 }

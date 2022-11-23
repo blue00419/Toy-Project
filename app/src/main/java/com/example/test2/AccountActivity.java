@@ -77,24 +77,30 @@ public class AccountActivity extends AppCompatActivity {
                         ApiService apiService = retrofit.create(ApiService.class);
 
                         UserData user = new UserData(email, password, nickname);
-                        Call<UserData> comment2 = apiService.post_account(user);
-                        comment2.enqueue(new Callback<UserData>() {
+                        Call<Data> comment = apiService.post_account(user);
+                        comment.enqueue(new Callback<Data>() {
                             @Override
-                            public void onResponse(Call<UserData> call, Response<UserData> response) {
+                            public void onResponse(Call<Data> call, Response<Data> response) {
                                 if(response.isSuccessful()){
-                                    Log.d("Retrofit", "account 연결 " + response.code());
 
-                                    switch (response.code()){
-                                        case 200:
-                                            Snackbar.make(view, "성공", Snackbar.LENGTH_LONG)
+                                    int responsecode = response.body().getCode();
+                                    String responsemsg = response.body().getMsg();
+                                    Log.d("Retrofit", "account 연결 " + response.code() + " " + responsecode + " " + responsemsg);
+
+                                    switch (responsecode){
+                                        case 100:
+                                            Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                             finish();
-                                        case 201:
-                                            Snackbar.make(view, "중복", Snackbar.LENGTH_LONG)
+                                            break;
+                                        case 101:
+                                            Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
-                                        case 202:
-                                            Snackbar.make(view, "이메일 형식을 확인해주세요.", Snackbar.LENGTH_LONG)
+                                            break;
+                                        case 102:
+                                            Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
+                                            break;
 
                                     }
                                 }
@@ -107,7 +113,7 @@ public class AccountActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(Call<UserData> call, Throwable t) {
+                            public void onFailure(Call<Data> call, Throwable t) {
                                 Log.d("Retrofit", "연결 실패");
                             }
                         });
