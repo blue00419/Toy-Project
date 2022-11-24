@@ -77,27 +77,30 @@ public class AccountActivity extends AppCompatActivity {
                         ApiService apiService = retrofit.create(ApiService.class);
 
                         UserData user = new UserData(email, password, nickname);
-                        Call<Data> comment = apiService.post_account(user);
+                        Call<Data> comment = apiService.postAccount(user);
                         comment.enqueue(new Callback<Data>() {
                             @Override
                             public void onResponse(Call<Data> call, Response<Data> response) {
                                 if(response.isSuccessful()){
 
-                                    int responsecode = response.body().getCode();
                                     String responsemsg = response.body().getMsg();
-                                    Log.d("Retrofit", "account 연결 " + response.code() + " " + responsecode + " " + responsemsg);
+                                    Log.d("Retrofit", "account 연결 " + response.code() + " " + responsemsg);
 
-                                    switch (responsecode){
-                                        case 100:
+                                    switch (response.code()){
+                                        case 200:
                                             Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                             finish();
                                             break;
-                                        case 101:
+                                        case 201:
                                             Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                             break;
-                                        case 102:
+                                        case 202:
+                                            Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                            break;
+                                        case 203:
                                             Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                             break;
@@ -106,9 +109,6 @@ public class AccountActivity extends AppCompatActivity {
                                 }
                                 else{
                                     Log.d("Retrofit", "post 실패");
-                                    Log.d("Retrofit", "" + response.code());
-                                    Log.d("Retrofit", response.errorBody().toString());
-                                    Log.d("Retrofit", call.request().body().toString());
                                 }
                             }
 

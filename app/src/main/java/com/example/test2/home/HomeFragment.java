@@ -2,9 +2,12 @@ package com.example.test2.home;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.example.test2.MainActivity.context;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import com.example.test2.ApiService;
 import com.example.test2.Data;
 import com.example.test2.R;
+import com.example.test2.SaveSharedPreference;
 import com.example.test2.TicketData;
 import com.example.test2.UserData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +39,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,9 +52,10 @@ import retrofit2.http.Url;
 
 public class HomeFragment extends Fragment {
 
-    Bitmap bitmap;
+    private Bitmap bitmap;
     private ImageView imageView;
     private View view;
+    private String user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,38 +69,41 @@ public class HomeFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create()).build();
         ApiService apiService = retrofit.create(ApiService.class);
 
-//        TicketData data = new TicketData("young", bitmap);
-//        Call<TicketData> comment = apiService.get_ticket(data);
-//        comment.enqueue(new Callback<TicketData>() {
-//            @Override
-//            public void onResponse(Call<TicketData> call, Response<TicketData> response) {
-//                if(response.isSuccessful()){
-//                    Log.d("Retrofit", "이미지 받기 ");
-//
-//                    imageView.setImageBitmap(response.body().getImage2());
-//                }
-//                else{
-//                    Log.d("Retrofit", "post 실패");
-//                    Log.d("Retrofit", "" + response.code());
-//                    Log.d("Retrofit", response.errorBody().toString());
-//                    Log.d("Retrofit", call.request().body().toString());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TicketData> call, Throwable t) {
-//                Log.d("Retrofit", "연결 실패");
-//            }
-//        });
+        user = SaveSharedPreference.getUserName(getContext());
+        Call<Data> comment = apiService.getImage(user);
+        comment.enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                if(response.isSuccessful()){
+                    Log.d("Retrofit", "이미지 받기 " + response.body().getNickname());
+                    Log.d("Retrofit", "이미지 받기2 " + StringToBitmap(response.body().getNickname()));
+
+                    imageView.setImageBitmap(StringToBitmap(response.body().getNickname()));
+                }
+                else{
+                    Log.d("Retrofit", "post 실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+                Log.d("Retrofit", "이미지 받기 실패");
+            }
+        });
 
         FloatingActionButton fab = view.findViewById(R.id.camera);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                activityResultPicture.launch(intent);
+                user = SaveSharedPreference.getUserName(getContext());
+                if(user.length() != 0){
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    activityResultPicture.launch(intent);
+                }
+                else{
+                    Snackbar.make(view, "로그인 해 주세요.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
 
             }
         });
@@ -100,46 +112,15 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    public static String saveBitmapToJpeg(Context context, Bitmap bitmap, String name){
-        int maximagesize = 50 * 10000; // 저용량 변환중 최대 사이즈
-        int realimagesize = maximagesize;
-        int quality = 100; //사진퀄리티는 처음 100부터 줄여나가면서 용량을 맞춥니다.
-
-        File storage = context.getCacheDir(); //임시파일(캐시라 적혀잇죠?)
-
-        String fileName = name + ".jpg";  // 어짜피 임시파일이기 때문에 알맞게 적어주세요.
-
-        File tempFile = new File(storage,fileName);
-
-        try{
-            tempFile.createNewFile();  // 파일을 생성해주고
-
-
-            //아래 부분이 가장 중요한 부분이에요.
-            while(realimagesize >= maximagesize) {
-                if(quality < 0){
-                    return "tobig";
-                }
-                FileOutputStream out = new FileOutputStream(tempFile);
-
-                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, out);
-                realimagesize = (int)tempFile.length(); //작아진 본 파일의 크기를 저장하여 다시 비교합니다.
-
-                quality -= 20; //이부분으 줄면서 용량이 작아닙니다.
-
-                out.close(); // 마무리로 닫아줍니다.
-
-            }
-
-            Log.d("Retrofit","imagelocation resizefilesize result: " + realimagesize);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static Bitmap StringToBitmap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 50, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
         }
-
-        return tempFile.getAbsolutePath();   //임시파일 경로로 리턴.
     }
 
     ActivityResultLauncher<Intent> activityResultPicture = registerForActivityResult(
@@ -151,31 +132,52 @@ public class HomeFragment extends Fragment {
                         Bundle extras = result.getData().getExtras();
                         bitmap = (Bitmap) extras.get("data");
                         imageView.setImageBitmap(bitmap);
-                        Uri uri = result.getData().getData();
 
-                        String path = saveBitmapToJpeg(getContext(), bitmap, "please");
-                        Log.d("Retrofit", "이미지 " + " " + path);
+                        File f = new File(context.getCacheDir(), user);
+                        try {
+                            assert !f.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        // form, body
+                        // 이미지의 Binary 정보 (이진 데이터)
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+                        byte[] bitmapdata = bos.toByteArray();
+
+                        FileOutputStream fos = null;
+                        try {
+                            fos = new FileOutputStream(f);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            assert fos != null;
+                            fos.write(bitmapdata);
+                            fos.flush();
+                            fos.close();
+                        } catch (IOException | NullPointerException e) {
+                            e.printStackTrace();
+                        }
 
                         Retrofit retrofit = new Retrofit.Builder().baseUrl(ApiService.API_URL)
                                 .addConverterFactory(GsonConverterFactory.create()).build();
                         ApiService apiService = retrofit.create(ApiService.class);
 
-                        TicketData data = new TicketData(path, bitmap);
-                        Call<Data> comment = apiService.post_ticket(data);
+                        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), f);
+                        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", f.getName(), reqFile);
+
+                        Call<Data> comment = apiService.postImage(body);
                         comment.enqueue(new Callback<Data>() {
                             @Override
                             public void onResponse(Call<Data> call, Response<Data> response) {
                                 if(response.isSuccessful()){
-                                    int responsecode = response.body().getCode();
-                                    String responsemsg = response.body().getMsg();
-                                    Log.d("Retrofit", "이미지 전송 " + response.code() + " " + responsecode + " " + responsemsg);
 
-                                }
-                                else{
+                                    String responsemsg = response.body().getMsg();
+                                    Log.d("Retrofit", "이미지 전송 " + response.code() + " " + responsemsg);
+                                }else{
                                     Log.d("Retrofit", "post 실패");
-                                    Log.d("Retrofit", "" + response.code());
-                                    Log.d("Retrofit", response.errorBody().toString());
-                                    Log.d("Retrofit", call.request().body().toString());
                                 }
                             }
 
@@ -188,13 +190,4 @@ public class HomeFragment extends Fragment {
                 }
             }
     );
-
-    public String bitmapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        byte[] imagebytes = baos.toByteArray();
-        String imageString = Base64.encodeToString(imagebytes, Base64.DEFAULT);
-        return imageString;
-    }
-
 }

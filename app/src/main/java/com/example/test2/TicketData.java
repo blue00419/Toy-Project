@@ -2,13 +2,17 @@ package com.example.test2;
 
 import android.graphics.Bitmap;
 
+import okhttp3.MultipartBody;
+
 public class TicketData {
     private String image1;
-    private Bitmap image2;
+    private byte[] image2;
+    private MultipartBody.Part imageData;
 
-    public TicketData(String image1, Bitmap image2) {
+    public TicketData(String image1, byte[] image2, MultipartBody.Part imageData) {
         this.image1 = image1;
         this.image2 = image2;
+        this.imageData = imageData;
     }
 
     public String getImage1() {
@@ -19,11 +23,11 @@ public class TicketData {
         this.image1 = image1;
     }
 
-    public Bitmap getImage2() {
+    public byte[] getImage2() {
         return image2;
     }
 
-    public void setImage2(Bitmap image2) {
+    public void setImage2(byte[] image2) {
         this.image2 = image2;
     }
 }

@@ -1,8 +1,10 @@
 package com.example.test2;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -12,6 +14,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -20,7 +23,7 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    public static final String API_URL = "https://ceb2-112-186-87-153.jp.ngrok.io";
+    public static final String API_URL = "https://ef72-112-186-87-153.jp.ngrok.io";
 
     @GET("tests")
     Call<ResponseBody> get_Test5();
@@ -32,16 +35,20 @@ public interface ApiService {
     Call<List<UserData>> get_account();
 
     @POST("/account/")
-    Call<Data> post_account(@Body UserData user);
+    Call<Data> postAccount(@Body UserData user);
 
     @POST("/login/")
-    Call<Data> post_login(@Body UserData user);
+    Call<Data> postLogin(@Body UserData user);
 
     @POST("/ticket_post/")
     Call<Data> post_ticket(@Body TicketData data);
 
+    @Multipart
+    @POST("/ticket_post/")
+    Call<Data> postImage(@Part MultipartBody.Part image);
+
     @POST("/ticket_get/")
-    Call<TicketData> get_ticket(@Body TicketData data);
+    Call<Data> getImage(@Body String data);
 
     @POST("tests")
     Call<ResponseBody> post_Test4(@Part("email") RequestBody email);

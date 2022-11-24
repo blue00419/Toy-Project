@@ -70,17 +70,16 @@ public class LoginActivity extends AppCompatActivity {
                     ApiService apiService = retrofit.create(ApiService.class);
 
                     UserData user = new UserData(email, password, "aaa");
-                    Call<Data> comment2 = apiService.post_login(user);
+                    Call<Data> comment2 = apiService.postLogin(user);
                     comment2.enqueue(new Callback<Data>() {
                         @Override
                         public void onResponse(Call<Data> call, Response<Data> response) {
                             if(response.isSuccessful()){
                                 String responsenickname = response.body().getNickname();
-                                int responsecode = response.body().getCode();
                                 String responsemsg = response.body().getMsg();
-                                Log.d("Retrofit", "login 연결 " + responsecode + " " + responsenickname + " " + responsemsg);
+                                Log.d("Retrofit", "login 연결 " + responsenickname + " " + responsemsg);
 
-                                switch (responsecode){
+                                switch (response.code()){
                                     case 200:
                                         Snackbar.make(view, responsemsg, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
@@ -105,9 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             else{
                                 Log.d("Retrofit", "post 실패");
-                                Log.d("Retrofit", "" + response.code());
-                                Log.d("Retrofit", response.errorBody().toString());
-                                Log.d("Retrofit", call.request().body().toString());
                             }
                         }
 
