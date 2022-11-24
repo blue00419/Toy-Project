@@ -20,7 +20,7 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    public static final String API_URL = "https://47bf-112-186-87-153.jp.ngrok.io";
+    public static final String API_URL = "https://ceb2-112-186-87-153.jp.ngrok.io";
 
     @GET("tests")
     Call<ResponseBody> get_Test5();
@@ -36,6 +36,12 @@ public interface ApiService {
 
     @POST("/login/")
     Call<Data> post_login(@Body UserData user);
+
+    @POST("/ticket_post/")
+    Call<Data> post_ticket(@Body TicketData data);
+
+    @POST("/ticket_get/")
+    Call<TicketData> get_ticket(@Body TicketData data);
 
     @POST("tests")
     Call<ResponseBody> post_Test4(@Part("email") RequestBody email);
